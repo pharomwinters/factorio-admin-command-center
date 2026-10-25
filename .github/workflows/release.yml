@@ -14,10 +14,12 @@ on:
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Define version
         id: version
@@ -35,9 +37,8 @@ jobs:
           git archive --format=zip --prefix=facc-redux/ -o "facc-redux_${{ steps.version.outputs.value }}.zip" HEAD
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.value }}
           files: facc-redux_${{ steps.version.outputs.value }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
