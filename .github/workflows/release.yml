@@ -28,15 +28,11 @@ jobs:
             echo "value=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Prepare folder
-        run: |
-          mkdir facc-redux
-          shopt -s extglob
-          mv !(facc-redux) facc-redux/
-
+      # git archive honors export-ignore in .gitattributes, which keeps out
+      # the dev files (ps1, sh, ...) that the mod portal rejects
       - name: Zip mod
         run: |
-          zip -r "facc-redux_${{ steps.version.outputs.value }}.zip" facc-redux/
+          git archive --format=zip --prefix=facc-redux/ -o "facc-redux_${{ steps.version.outputs.value }}.zip" HEAD
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v1
