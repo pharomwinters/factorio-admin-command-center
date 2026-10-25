@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.4.0
 Date: 2026-10-24
+  Info:
+    - First release as FACC Redux, a Factorio 2.1 continuation of Factorio Admin Command Center by louanbastos.
+    - Replaces the original mod in existing saves and carries over its state (requires removing the original mod).
   Features:
     - Added "Infinite ammo (weapons and turrets)" startup setting.
   Compatibility:

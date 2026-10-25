@@ -158,12 +158,34 @@ local function update_legendary_shortcut_availability()
   end)
 end
 --------------------------------------------------------------------------------
+-- Adopt storage from the original mod when it is replaced via migrates_from.
+-- The engine parks the old table under storage._migrated[<old mod name>].
+-- Old values win: anything already in storage was only freshly initialized.
+--------------------------------------------------------------------------------
+local LEGACY_MOD_NAME = "factorio-admin-command-center"
+
+local function adopt_legacy_storage()
+  local migrated = storage._migrated
+  local legacy = migrated and migrated[LEGACY_MOD_NAME]
+  if not legacy then
+    return false
+  end
+  for key, value in pairs(legacy) do
+    storage[key] = value
+  end
+  migrated[LEGACY_MOD_NAME] = nil
+  log("[FACC][CONTROL] Adopted storage from " .. LEGACY_MOD_NAME)
+  return true
+end
+--------------------------------------------------------------------------------
 -- On first load: remove old buttons and update shortcuts
 --------------------------------------------------------------------------------
 script.on_init(function()
-  flib_on_tick_n.init()
-  storage.facc_auto_task_ids = nil
-  storage.facc_auto_task_intervals = nil
+  if not adopt_legacy_storage() then
+    flib_on_tick_n.init()
+    storage.facc_auto_task_ids = nil
+    storage.facc_auto_task_intervals = nil
+  end
   remove_old_button()
   update_legendary_shortcut_availability()
 end)
@@ -174,6 +196,7 @@ end)
 -- 3) automatically regenerate resources if user did NOT disable it
 --------------------------------------------------------------------------------
 script.on_configuration_changed(function(event)
+  adopt_legacy_storage()
   if not storage.__flib or not storage.__flib.on_tick_n then
     flib_on_tick_n.init()
     storage.facc_auto_task_ids = nil

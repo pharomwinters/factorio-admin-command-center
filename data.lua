@@ -152,9 +152,9 @@ data:extend({
     localised_description    = {"controls.facc_toggle_gui_description"},
     action                   = "lua",
     associated_control_input = "facc_toggle_gui",
-    icon                     = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/facc-x56.png",
+    icon                     = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/facc-x56.png",
     icon_size                = 56,
-    small_icon               = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/facc-x24.png",
+    small_icon               = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/facc-x24.png",
     small_icon_size          = 24
   }
 })
@@ -170,7 +170,7 @@ do
       name                         = "facc_legendary_upgrader",
       localised_name               = {"facc.legendary-upgrader-name"},
       localised_description        = {"facc.legendary-upgrader-desc"},
-      icons                        = {{ icon = "__factorio-admin-command-center__/graphics/icons/legendary-upgrade-planner.png" }},
+      icons                        = {{ icon = "__facc-redux__/graphics/icons/legendary-upgrade-planner.png" }},
       flags                        = {"only-in-cursor", "not-stackable", "spawnable"},
       subgroup                     = "tool",
       order                        = "c[admin]-d[legendary-upgrader]",
@@ -213,9 +213,9 @@ do
       technology_to_unlock     = "construction-robotics",
       item_to_spawn            = "facc_legendary_upgrader",
       style                    = "green",
-      icon                     = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x56.png",
+      icon                     = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x56.png",
       icon_size                = 56,
-      small_icon               = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x24.png",
+      small_icon               = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x24.png",
       small_icon_size          = 24
     }
   })

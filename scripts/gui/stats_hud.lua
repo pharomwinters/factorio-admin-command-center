@@ -34,7 +34,7 @@ local function read_mod_setting_value(source, name)
     return direct.value
   end
 
-  local prefixed = source["factorio-admin-command-center." .. name]
+  local prefixed = source[script.mod_name .. "." .. name]
   if prefixed and prefixed.value ~= nil then
     return prefixed.value
   end

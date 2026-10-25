@@ -727,7 +727,7 @@ local API_FUNCTIONS = {
   end,
 
   get_mod_version = function()
-    return script.active_mods["factorio-admin-command-center"] or "unknown"
+    return script.active_mods[script.mod_name] or "unknown"
   end,
 
   get_capabilities = function()
