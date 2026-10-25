@@ -205,13 +205,13 @@ local TOGGLE_HANDLERS = {
   facc_surface_peaceful_mode = function(player, enabled) return call_safe(surface_properties.set_peaceful_mode, player, enabled) end,
   facc_surface_no_enemies_mode = function(player, enabled) return call_safe(surface_properties.set_no_enemies_mode, player, enabled) end,
   facc_auto_clean_pollution = function(_player, _enabled)
-    flib_table.for_each(game.players, function(p)
+    flib_table.any_of(game.players, function(p)
       clean_pollution.run(p)
     end)
     return true, nil
   end,
   facc_auto_instant_research = function(_player, _enabled)
-    flib_table.for_each(game.players, function(p)
+    flib_table.any_of(game.players, function(p)
       instant_research.run(p)
     end)
     return true, nil
@@ -727,7 +727,7 @@ local API_FUNCTIONS = {
   end,
 
   get_mod_version = function()
-    return script.active_mods["factorio-admin-command-center"] or "unknown"
+    return script.active_mods[script.mod_name] or "unknown"
   end,
 
   get_capabilities = function()

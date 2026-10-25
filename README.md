@@ -1,13 +1,16 @@
-# Factorio Admin Command Center (FACC)
+# Factorio Admin Command Center Redux (FACC Redux)
 
-A compact admin toolkit for Factorio 2.0 with a category-based GUI, live sliders/switches, and no console dependency for most actions.
+A compact admin toolkit for Factorio 2.1 with a category-based GUI, live sliders/switches, and no console dependency for most actions.
 
-- 🔗 Mod Portal: https://mods.factorio.com/mod/factorio-admin-command-center
-- 🔗 GitHub: https://github.com/factoriocenter/factorio-admin-command-center
+FACC Redux continues [Factorio Admin Command Center](https://mods.factorio.com/mod/factorio-admin-command-center) by louanbastos (Louan Fontenele), which doesn't support Factorio 2.1. It replaces the original mod in existing saves: remove the original, add FACC Redux, and your saved state carries over.
+
+- 🔗 Mod Portal: https://mods.factorio.com/mod/facc-redux
+- 🔗 GitHub: https://github.com/pharomwinters/factorio-admin-command-center
+- 🔗 Original mod: https://github.com/factoriocenter/factorio-admin-command-center
 
 ## Current Version
 
-- 🏷️ Version: `4.3.1`
+- 🏷️ Version: `4.4.0`
 - 📝 Changelog: [changelog.txt](changelog.txt)
 
 ## Features (All Current)
@@ -155,6 +158,7 @@ A compact admin toolkit for Factorio 2.0 with a category-based GUI, live sliders
 - ⚡ `Remove electricity requirement from machines`
 - ⛽ `Remove fuel requirement from machines and vehicles`
 - 🧪 `Ignore recipe ingredient inputs`
+- 🔫 `Infinite ammo (weapons and turrets)`
 - 🔄 `Enable auto resource regeneration`
 - 🧵 `Enable background optimization for heavy actions`
 - 📊 `Stats HUD toggles and layout presets`
@@ -168,26 +172,35 @@ A compact admin toolkit for Factorio 2.0 with a category-based GUI, live sliders
 
 ## Compatibility
 
-- 🎮 Factorio: `2.0` (base `>= 2.0.76`)
-- 📚 Required library: `flib >= 0.16.5`
-- 🔌 Optional integrations: `quality >= 2.0.76`, `space-age >= 2.0.76`, `elevated-rails >= 2.0.76`
-- 🌍 Optional locale pack: `factorio-admin-command-center-locales >= 1.3.8`
+- 🎮 Factorio: `2.1` (base `>= 2.1.7`)
+- 📚 Required library: `flib >= 0.17.0`
+- 🔌 Optional integrations: `quality >= 2.1.7`, `space-age >= 2.1.7`, `elevated-rails >= 2.1.7`
+- 🚫 Incompatible with the original `factorio-admin-command-center` mod (FACC Redux replaces it).
 - 👥 In multiplayer, admin tools are available to admins only.
 
 ## Languages
 
 - 🇺🇸 English
 - 🇧🇷 Portuguese (Brazil)
-- 🌐 Additional languages are available via the optional companion locales mod.
 
 ## Installation
 
-1. ✅ Install from Mod Portal (recommended): https://mods.factorio.com/mod/factorio-admin-command-center
+1. ✅ Install from Mod Portal (recommended): https://mods.factorio.com/mod/facc-redux
 2. 📦 Or download from Releases and place the `.zip` in your Factorio `mods` folder.
+
+### Switching from the original mod
+
+1. 💾 Back up your save.
+2. ❌ Disable or remove `Factorio Admin Command Center`.
+3. ✅ Enable `Factorio Admin Command Center Redux` and load the save.
+
+FACC Redux uses Factorio 2.1's `migrates_from` to take over the original mod's saved state, GUIs and scheduled tasks.
 
 ## License
 
-[MIT](LICENSE) © <!-- change year start --> 2026<!-- change year end --> Factorio Center
+[MIT](LICENSE) © <!-- change year start --> 2026<!-- change year end --> pharomwinters
+
+Based on the original Factorio Admin Command Center, © 2025 Louan Fontenele (Factorio Center), also MIT licensed.
 
 ## Contributors
 

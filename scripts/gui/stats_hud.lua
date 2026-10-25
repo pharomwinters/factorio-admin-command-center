@@ -34,7 +34,7 @@ local function read_mod_setting_value(source, name)
     return direct.value
   end
 
-  local prefixed = source["factorio-admin-command-center." .. name]
+  local prefixed = source[script.mod_name .. "." .. name]
   if prefixed and prefixed.value ~= nil then
     return prefixed.value
   end
@@ -434,13 +434,8 @@ local function get_platform_propellant_text(surface)
 
   local total = 0
   for _, thruster in pairs(thrusters) do
-    if thruster and thruster.valid and thruster.fluidbox then
-      for i = 1, #thruster.fluidbox do
-        local fluid = thruster.fluidbox[i]
-        if fluid and fluid.amount then
-          total = total + fluid.amount
-        end
-      end
+    if thruster and thruster.valid then
+      total = total + (thruster.get_fluid_count() or 0)
     end
   end
 

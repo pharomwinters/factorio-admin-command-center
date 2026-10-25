@@ -101,7 +101,7 @@ end
 local function top_up_area(surface, area)
   -- Read multipliers at runtime, with legacy fallback
   local mult_solid, mult_fluid = read_multipliers_pair()
-  flib_table.for_each(surface.find_entities_filtered{ area = area, type = "resource" }, function(resource)
+  flib_table.any_of(surface.find_entities_filtered{ area = area, type = "resource" }, function(resource)
     if resource.prototype.infinite_resource then
       local normal = resource.prototype.normal_resource_amount
       if normal and normal > 0 then
@@ -117,7 +117,7 @@ end
 -- Remove legacy UI buttons on init/updates
 --------------------------------------------------------------------------------
 local function remove_old_button()
-  flib_table.for_each(game.players, function(player)
+  flib_table.any_of(game.players, function(player)
     for _, name in ipairs({ "facc_main_button", "factorio_admin_command_center_button" }) do
       local btn = player.gui.top[name]
       if btn and btn.valid then
@@ -143,7 +143,7 @@ end
 
 local function update_legendary_shortcut_availability()
   local quality_active = compat.is_quality_active()
-  flib_table.for_each(game.players, function(player)
+  flib_table.any_of(game.players, function(player)
     if not (player and player.valid) then
       return
     end
@@ -158,12 +158,34 @@ local function update_legendary_shortcut_availability()
   end)
 end
 --------------------------------------------------------------------------------
+-- Adopt storage from the original mod when it is replaced via migrates_from.
+-- The engine parks the old table under storage._migrated[<old mod name>].
+-- Old values win: anything already in storage was only freshly initialized.
+--------------------------------------------------------------------------------
+local LEGACY_MOD_NAME = "factorio-admin-command-center"
+
+local function adopt_legacy_storage()
+  local migrated = storage._migrated
+  local legacy = migrated and migrated[LEGACY_MOD_NAME]
+  if not legacy then
+    return false
+  end
+  for key, value in pairs(legacy) do
+    storage[key] = value
+  end
+  migrated[LEGACY_MOD_NAME] = nil
+  log("[FACC][CONTROL] Adopted storage from " .. LEGACY_MOD_NAME)
+  return true
+end
+--------------------------------------------------------------------------------
 -- On first load: remove old buttons and update shortcuts
 --------------------------------------------------------------------------------
 script.on_init(function()
-  flib_on_tick_n.init()
-  storage.facc_auto_task_ids = nil
-  storage.facc_auto_task_intervals = nil
+  if not adopt_legacy_storage() then
+    flib_on_tick_n.init()
+    storage.facc_auto_task_ids = nil
+    storage.facc_auto_task_intervals = nil
+  end
   remove_old_button()
   update_legendary_shortcut_availability()
 end)
@@ -174,6 +196,7 @@ end)
 -- 3) automatically regenerate resources if user did NOT disable it
 --------------------------------------------------------------------------------
 script.on_configuration_changed(function(event)
+  adopt_legacy_storage()
   if not storage.__flib or not storage.__flib.on_tick_n then
     flib_on_tick_n.init()
     storage.facc_auto_task_ids = nil
@@ -185,7 +208,7 @@ script.on_configuration_changed(function(event)
   if is_auto_resource_regeneration_enabled() then
     -- If infinite-resources was just disabled, restore finite resources on all surfaces
     if not settings.startup["facc-infinite-resources"].value then
-      flib_table.for_each(game.surfaces, function(surface)
+      flib_table.any_of(game.surfaces, function(surface)
         -- dummy context to satisfy regenerate_finite.run
         local ctx = {
           surface = surface,
@@ -197,7 +220,7 @@ script.on_configuration_changed(function(event)
     end
     -- If infinite-resources is enabled, top up every existing surface to N× once
     if settings.startup["facc-infinite-resources"].value then
-      flib_table.for_each(game.surfaces, function(surface)
+      flib_table.any_of(game.surfaces, function(surface)
         safe_control_call("regenerate_infinite.run_on_surface", regenerate_infinite.run_on_surface, surface)
       end)
     end

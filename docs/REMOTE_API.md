@@ -2,7 +2,7 @@
 
 This document describes the public remote API exposed by Factorio Admin Command Center (FACC) for other mods.
 
-- Mod id: `factorio-admin-command-center`
+- Mod id: `facc-redux`
 - Interface names:
   - `facc`
   - `factorio_admin_command_center` (alias)

@@ -152,9 +152,9 @@ data:extend({
     localised_description    = {"controls.facc_toggle_gui_description"},
     action                   = "lua",
     associated_control_input = "facc_toggle_gui",
-    icon                     = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/facc-x56.png",
+    icon                     = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/facc-x56.png",
     icon_size                = 56,
-    small_icon               = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/facc-x24.png",
+    small_icon               = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/facc-x24.png",
     small_icon_size          = 24
   }
 })
@@ -170,7 +170,7 @@ do
       name                         = "facc_legendary_upgrader",
       localised_name               = {"facc.legendary-upgrader-name"},
       localised_description        = {"facc.legendary-upgrader-desc"},
-      icons                        = {{ icon = "__factorio-admin-command-center__/graphics/icons/legendary-upgrade-planner.png" }},
+      icons                        = {{ icon = "__facc-redux__/graphics/icons/legendary-upgrade-planner.png" }},
       flags                        = {"only-in-cursor", "not-stackable", "spawnable"},
       subgroup                     = "tool",
       order                        = "c[admin]-d[legendary-upgrader]",
@@ -183,7 +183,7 @@ do
 
       select = {
         border_color    = {0, 200, 0},
-        mode            = {"upgrade"},
+        mode            = {"upgrade", "any-entity"},
         cursor_box_type = "not-allowed",
         started_sound   = { filename = "__core__/sound/upgrade-select-start.ogg" },
         ended_sound     = { filename = "__core__/sound/upgrade-select-end.ogg" }
@@ -195,7 +195,7 @@ do
       },
       reverse_select = {
         border_color    = {0, 200, 0},
-        mode            = {"upgrade"},
+        mode            = {"upgrade", "any-entity"},
         cursor_box_type = "not-allowed"
       },
       reverse_alt_select = {
@@ -213,9 +213,9 @@ do
       technology_to_unlock     = "construction-robotics",
       item_to_spawn            = "facc_legendary_upgrader",
       style                    = "green",
-      icon                     = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x56.png",
+      icon                     = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x56.png",
       icon_size                = 56,
-      small_icon               = "__factorio-admin-command-center__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x24.png",
+      small_icon               = "__facc-redux__/graphics/icons/shortcut-toolbar/mip/legendary-upgrade-planner-x24.png",
       small_icon_size          = 24
     }
   })
@@ -228,7 +228,7 @@ data:extend({
   {
     type                  = "custom-input",
     name                  = "facc_console_exec_input",
-    key_sequence          = "CONTROL + ENTER",
+    key_sequence          = "CONTROL + RETURN",
     consuming             = "game-only",
     localised_name        = {"controls.facc_console_exec_input"},
     localised_description = {"controls.facc_console_exec_input_description"}
@@ -327,7 +327,7 @@ if show_cheat_tab then
   }
   if data.raw.recipe["heat-interface"] then
     local r = data.raw.recipe["heat-interface"]
-    r.category    = nil
+    r.categories  = nil
     r.ingredients = heat_ingredients
     default_properties(r)
     default_properties(data.raw.item["heat-interface"])
@@ -389,7 +389,7 @@ if show_cheat_tab then
         }
       },
       ["express-loader"] = {
-        category    = "crafting-with-fluid",
+        categories  = {"crafting-with-fluid"},
         ingredients = {
           {type="item",  name="iron-gear-wheel", amount=1000},
           {type="item",  name="fast-loader",     amount=1},
@@ -401,7 +401,7 @@ if show_cheat_tab then
       local r = {
         type            = "recipe",
         name            = name,
-        category        = def.category,
+        categories      = def.categories,
         energy_required = 0.5,
         ingredients     = def.ingredients,
         results         = {{type="item", name=name, amount=1}}
@@ -414,7 +414,7 @@ if show_cheat_tab then
       local r = {
         type            = "recipe",
         name            = "turbo-loader",
-        category        = "crafting-with-fluid",
+        categories      = {"crafting-with-fluid"},
         energy_required = 0.5,
         ingredients     = {
           {type="item",  name="tungsten-plate", amount=1000},
