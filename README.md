@@ -202,27 +202,4 @@ FACC Redux uses Factorio 2.1's `migrates_from` to take over the original mod's s
 
 Based on the original Factorio Admin Command Center, © 2025 Louan Fontenele (Factorio Center), also MIT licensed.
 
-## Contributors
-
-<!-- readme: contributors,bot/- -start -->
-<table>
-	<tbody>
-		<tr>
-            <td align="center">
-                <a href="https://github.com/louanfontenele">
-                    <img src="https://avatars.githubusercontent.com/u/2886066?v=4" width="100;" alt="louanfontenele"/>
-                    <br />
-                    <sub><b>Louan Fontenele</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/lsalazarm99">
-                    <img src="https://avatars.githubusercontent.com/u/42286051?v=4" width="100;" alt="lsalazarm99"/>
-                    <br />
-                    <sub><b>Leonardo Salazar</b></sub>
-                </a>
-            </td>
-		</tr>
-	<tbody>
-</table>
 <!-- readme: contributors,bot/- -end -->
