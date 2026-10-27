@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.4.1
+Date: 2026-10-26
+  Bugfixes:
+    - Fixed slider bonuses (reach, robot speed, inventory slots, lab speed and the rest) being lost when mods were added, removed or updated, or when startup settings changed. The game resets technology effects at those times, which wiped the bonuses while the GUI still showed them as applied. They are now reapplied automatically, so there is no need to clear and re-set the sliders.
+---------------------------------------------------------------------------------------------------
 Version: 4.4.0
 Date: 2026-10-24
   Info:

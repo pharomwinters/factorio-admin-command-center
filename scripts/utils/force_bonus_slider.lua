@@ -5,8 +5,8 @@ local M = {}
 local math_util = require("scripts/utils/flib_math")
 
 --- Apply a slider bonus to a LuaForce numeric field while preserving the
---- underlying base value (e.g. research or other mods).
--- @param player LuaPlayer
+--- underlying base value (e.g. research or other mods). No permission check.
+-- @param force LuaForce
 -- @param old number
 -- @param new number
 -- @param field_name string
@@ -17,10 +17,9 @@ local math_util = require("scripts/utils/flib_math")
 --        options.integer boolean (default true)
 -- @return boolean ok
 -- @return number|string value_or_error
-function M.apply(player, old, new, field_name, options)
-  if not is_allowed(player) then
-    player.print({"facc.not-allowed"})
-    return false, "not-allowed"
+function M.apply_to_force(force, old, new, field_name, options)
+  if not (force and force.valid) then
+    return false, "invalid-force"
   end
 
   if type(field_name) ~= "string" or field_name == "" then
@@ -36,7 +35,6 @@ function M.apply(player, old, new, field_name, options)
   local new_bonus = math_util.clamp_number(new, 0, max_bonus, 0)
   local previous_slider = math_util.clamp_number(old, 0, max_bonus, 0)
 
-  local force = player.force
   local ok_current, current = pcall(function()
     return force[field_name]
   end)
@@ -70,6 +68,16 @@ function M.apply(player, old, new, field_name, options)
   end
 
   return true, result
+end
+
+--- Same as apply_to_force, on the player's force, after a permission check.
+-- @param player LuaPlayer
+function M.apply(player, old, new, field_name, options)
+  if not is_allowed(player) then
+    player.print({"facc.not-allowed"})
+    return false, "not-allowed"
+  end
+  return M.apply_to_force(player.force, old, new, field_name, options)
 end
 
 return M

@@ -10,19 +10,17 @@ local function clamp_slider(value)
   return math_util.clamp_number(value, 0, MAX_BONUS, 0)
 end
 
---- Applies a new slider-based manual crafting speed modifier.
+--- Applies a new slider-based manual crafting speed modifier. No permission check.
 -- It removes the previous slider modifier and applies the new one,
 -- ensuring that existing (e.g. research) modifiers are preserved.
--- @param player LuaPlayer - the invoking player
+-- @param force LuaForce
 -- @param old number       - the previous modifier value applied by the slider
 -- @param new number       — the new slider modifier to apply
-function M.run(player, old, new)
-  if not is_allowed(player) then
-    player.print({"facc.not-allowed"})
+function M.apply_to_force(force, old, new)
+  if not (force and force.valid) then
     return
   end
 
-  local force = player.force
   local current = force.manual_crafting_speed_modifier or 0
 
   local previous_slider = clamp_slider(old)
@@ -36,6 +34,16 @@ function M.run(player, old, new)
   local slider_bonus = clamp_slider(new)
   local result = math_util.max(MIN_MODIFIER, base + slider_bonus)
   force.manual_crafting_speed_modifier = result
+end
+
+--- Same as apply_to_force, on the player's force, after a permission check.
+-- @param player LuaPlayer - the invoking player
+function M.run(player, old, new)
+  if not is_allowed(player) then
+    player.print({"facc.not-allowed"})
+    return
+  end
+  M.apply_to_force(player.force, old, new)
 end
 
 return M

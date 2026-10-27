@@ -21,6 +21,25 @@ local function get_minimum(force)
   return MIN_BONUS
 end
 
+--- Swap the old bonus for the new one on a force. No permission check, no chat output.
+-- @param force LuaForce
+-- @param old_value any
+-- @param new_value any
+-- @return boolean ok, number|string value_or_error
+function M.apply_to_force(force, old_value, new_value)
+  if not (force and force.valid) then
+    return false, "invalid-force"
+  end
+  local old_bonus = math_util.clamp_number(math.floor(tonumber(old_value) or 0), MIN_BONUS, MAX_BONUS, MIN_BONUS)
+  local new_bonus = math_util.clamp_number(math.floor(tonumber(new_value) or 0), MIN_BONUS, MAX_BONUS, MIN_BONUS)
+  return force_bonus_slider.apply_to_force(force, old_bonus, new_bonus, "character_trash_slot_count", {
+    max_bonus = MAX_BONUS,
+    min_value = get_minimum(force),
+    max_value = MAX_BONUS,
+    integer = true
+  })
+end
+
 --- Set force character trash slot bonus from a user-supplied value.
 -- Uses old/new delta semantics to preserve research/base value.
 -- Returns the applied total value on success.
@@ -61,14 +80,7 @@ function M.run(player, old_value, raw_value)
     player.print({"facc.set-character-trash-slot-bonus-clamped-max", MAX_BONUS})
   end
 
-  local clamped_old = math_util.clamp_number(old_bonus, MIN_BONUS, MAX_BONUS, MIN_BONUS)
-
-  local ok, result = force_bonus_slider.apply(player, clamped_old, clamped_new, "character_trash_slot_count", {
-    max_bonus = MAX_BONUS,
-    min_value = minimum,
-    max_value = MAX_BONUS,
-    integer = true
-  })
+  local ok, result = M.apply_to_force(force, old_bonus, clamped_new)
 
   if not ok then
     player.print({"facc.runtime-compat-error", "facc_character_trash_slot_bonus"})

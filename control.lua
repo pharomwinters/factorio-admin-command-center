@@ -33,6 +33,8 @@ local regenerate_infinite = require("scripts/startup-settings/regenerate_to_infi
 -- NEW: Invincible player switch module (reapply on join/respawn)
 --------------------------------------------------------------------------------
 local invincible_player = require("scripts/character/invincible_player")
+-- Puts slider bonuses back after the game resets technology effects
+local reapply_force_bonuses = require("scripts/utils/reapply_force_bonuses")
 --------------------------------------------------------------------------------
 -- Utility: parse "Nx" and read (solid, fluid) multipliers with legacy fallback
 --------------------------------------------------------------------------------
@@ -191,9 +193,10 @@ script.on_init(function()
 end)
 --------------------------------------------------------------------------------
 -- When configuration changes (mod update or startup setting change):
--- 1) remove old buttons
--- 2) update legendary upgrader shortcut
--- 3) automatically regenerate resources if user did NOT disable it
+-- 1) reapply slider bonuses (the game reset technology effects before this)
+-- 2) remove old buttons
+-- 3) update legendary upgrader shortcut
+-- 4) automatically regenerate resources if user did NOT disable it
 --------------------------------------------------------------------------------
 script.on_configuration_changed(function(event)
   adopt_legacy_storage()
@@ -202,6 +205,7 @@ script.on_configuration_changed(function(event)
     storage.facc_auto_task_ids = nil
     storage.facc_auto_task_intervals = nil
   end
+  safe_control_call("reapply_force_bonuses.reapply_all", reapply_force_bonuses.reapply_all)
   remove_old_button()
   update_legendary_shortcut_availability()
   -- Skip auto-regeneration if the user has activated the new setting
@@ -240,7 +244,8 @@ script.on_event(defines.events.on_research_finished, function()
   update_legendary_shortcut_availability()
 end)
 
-script.on_event(defines.events.on_technology_effects_reset, function()
+script.on_event(defines.events.on_technology_effects_reset, function(e)
+  safe_control_call("reapply_force_bonuses.reapply", reapply_force_bonuses.reapply, e.force)
   update_legendary_shortcut_availability()
 end)
 
