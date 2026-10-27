@@ -5,19 +5,17 @@ local M = {}
 local MAX_BONUS = 50
 local math_util = require("scripts/utils/flib_math")
 
---- Applies a new slider-based speed bonus for worker robots.
+--- Applies a new slider-based speed bonus for worker robots. No permission check.
 -- It removes the previous slider bonus and applies the new one,
 -- ensuring that existing (e.g. research) bonuses are preserved.
--- @param player LuaPlayer — the invoking player
+-- @param force LuaForce
 -- @param old number       — the previous bonus value applied by the slider
 -- @param new number       — the new slider bonus to apply
-function M.apply(player, old, new)
-  if not is_allowed(player) then
-    player.print({"facc.not-allowed"})
+function M.apply_to_force(force, old, new)
+  if not (force and force.valid) then
     return
   end
 
-  local force = player.force
   local current = force.worker_robots_speed_modifier or 0
 
   -- Clamp persisted slider value; UI can only store [0, MAX_BONUS] but older saves
@@ -39,6 +37,16 @@ function M.apply(player, old, new)
 
   -- Apply base + new slider bonus
   force.worker_robots_speed_modifier = base + slider_bonus
+end
+
+--- Same as apply_to_force, on the player's force, after a permission check.
+-- @param player LuaPlayer — the invoking player
+function M.apply(player, old, new)
+  if not is_allowed(player) then
+    player.print({"facc.not-allowed"})
+    return
+  end
+  M.apply_to_force(player.force, old, new)
 end
 
 return M

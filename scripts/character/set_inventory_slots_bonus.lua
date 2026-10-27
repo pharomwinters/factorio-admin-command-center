@@ -18,6 +18,29 @@ local function is_toolbelt_researched(force)
   return tech and tech.researched == true
 end
 
+local function get_minimum(force)
+  return is_toolbelt_researched(force) and TOOLBELT_MINIMUM or BASE_MINIMUM
+end
+
+--- Swap the old bonus for the new one on a force. No permission check, no chat output.
+-- @param force LuaForce
+-- @param old_value any
+-- @param new_value any
+-- @return boolean ok, number|string value_or_error
+function M.apply_to_force(force, old_value, new_value)
+  if not (force and force.valid) then
+    return false, "invalid-force"
+  end
+  local old_bonus = math_util.clamp_number(math.floor(tonumber(old_value) or 0), 0, MAX_BONUS, 0)
+  local new_bonus = math_util.clamp_number(math.floor(tonumber(new_value) or 0), 0, MAX_BONUS, 0)
+  return force_bonus_slider.apply_to_force(force, old_bonus, new_bonus, "character_inventory_slots_bonus", {
+    max_bonus = MAX_BONUS,
+    min_value = get_minimum(force),
+    max_value = MAX_BONUS,
+    integer = true
+  })
+end
+
 --- Set force inventory slots bonus from a user-supplied value.
 -- Uses old/new delta semantics to preserve research/base value.
 -- Returns the applied total value on success.
@@ -43,8 +66,7 @@ function M.run(player, old_value, raw_value)
     return nil, BASE_MINIMUM, nil
   end
 
-  local toolbelt_researched = is_toolbelt_researched(force)
-  local minimum = toolbelt_researched and TOOLBELT_MINIMUM or BASE_MINIMUM
+  local minimum = get_minimum(force)
   local n = tonumber(raw_value)
   if n == nil then
     player.print({"facc.set-inventory-slots-bonus-invalid"})
@@ -58,14 +80,7 @@ function M.run(player, old_value, raw_value)
   if clamped_new ~= new_bonus then
     player.print({"facc.set-inventory-slots-bonus-clamped-max", MAX_BONUS})
   end
-  local clamped_old = math_util.clamp_number(old_bonus, 0, MAX_BONUS, 0)
-
-  local ok, result = force_bonus_slider.apply(player, clamped_old, clamped_new, "character_inventory_slots_bonus", {
-    max_bonus = MAX_BONUS,
-    min_value = minimum,
-    max_value = MAX_BONUS,
-    integer = true
-  })
+  local ok, result = M.apply_to_force(force, old_bonus, clamped_new)
 
   if not ok then
     player.print({"facc.runtime-compat-error", "facc_set_inventory_slots_bonus"})

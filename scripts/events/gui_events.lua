@@ -248,14 +248,7 @@ local FACC_SWITCHES = {
   facc_surface_no_enemies_mode = true,
 }
 
-local DISTANCE_SLIDERS = {
-  slider_build_distance = "character_build_distance_bonus",
-  slider_reach_distance = "character_reach_distance_bonus",
-  slider_resource_reach_distance = "character_resource_reach_distance_bonus",
-  slider_item_drop_distance = "character_item_drop_distance_bonus",
-  slider_item_pickup_distance = "character_item_pickup_distance_bonus",
-  slider_loot_pickup_distance = "character_loot_pickup_distance_bonus",
-}
+local DISTANCE_SLIDERS = distance_bonus.SLIDER_PROPERTIES
 
 local features = {
   facc_toggle_editor        = require("scripts/cheats/toggle_editor_mode"),

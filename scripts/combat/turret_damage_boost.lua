@@ -38,20 +38,21 @@ local function safe_set(force, turret_id, value)
   end)
 end
 
-function M.apply(player, old, new)
-  if not is_allowed(player) then
-    player.print({"facc.not-allowed"})
-    return
+--- Shifts every known modifier by the slider delta (new - old). No permission check.
+-- @param force LuaForce
+-- @return number|nil how many modifiers were set, or nil when there was nothing to do
+function M.apply_to_force(force, old, new)
+  if not (force and force.valid) then
+    return nil
   end
 
   local old_bonus = clamp_slider(old)
   local new_bonus = clamp_slider(new)
   local delta = new_bonus - old_bonus
   if delta == 0 then
-    return
+    return nil
   end
 
-  local force = player.force
   local applied_count = 0
 
   for _, turret_id in ipairs(TURRET_IDS) do
@@ -65,7 +66,17 @@ function M.apply(player, old, new)
     end
   end
 
-  if applied_count == 0 then
+  return applied_count
+end
+
+--- Same as apply_to_force, on the player's force, after a permission check.
+-- @param player LuaPlayer
+function M.apply(player, old, new)
+  if not is_allowed(player) then
+    player.print({"facc.not-allowed"})
+    return
+  end
+  if M.apply_to_force(player.force, old, new) == 0 then
     player.print({"facc.runtime-compat-error", "slider_turret_damage_boost"})
   end
 end

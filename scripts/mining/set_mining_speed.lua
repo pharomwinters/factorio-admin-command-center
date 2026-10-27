@@ -5,6 +5,18 @@
 local M = {}
 local math_util = require("scripts/utils/flib_math")
 
+--- Sets the mining speed modifier on a force. No permission check.
+-- @param force LuaForce
+-- @param modifier number
+function M.apply_to_force(force, modifier)
+  if not (force and force.valid) then
+    return
+  end
+  -- Clamp between 0 and 1000
+  local m = math_util.clamp_number(modifier, 0, 1000, 0)
+  force.manual_mining_speed_modifier = m
+end
+
 --- Runs the mining speed change.
 -- Checks permissions, clamps the value, applies and notifies the player.
 -- @param player LuaPlayer
@@ -14,11 +26,7 @@ function M.run(player, modifier)
     player.print({"facc.not-allowed"})
     return
   end
-  -- Clamp between 0 and 1000
-  local m = math_util.clamp_number(modifier, 0, 1000, 0)
-  local force = player.force
-  force.manual_mining_speed_modifier = m
-  -- player.print({"facc.set-mining-speed-msg", m})
+  M.apply_to_force(player.force, modifier)
 end
 
 return M
